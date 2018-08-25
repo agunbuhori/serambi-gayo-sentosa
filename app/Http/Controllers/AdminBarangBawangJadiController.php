@@ -5,12 +5,12 @@
 	use DB;
 	use CRUDBooster;
 
-	class AdminBarangCimuningController extends \crocodicstudio\crudbooster\controllers\CBController {
+	class AdminBarangBawangJadiController extends \crocodicstudio\crudbooster\controllers\CBController {
 
 	    public function cbInit() {
 
 			# START CONFIGURATION DO NOT REMOVE THIS LINE
-			$this->title_field = "nama_barang";
+			$this->title_field = "id";
 			$this->limit = "20";
 			$this->orderby = "id,desc";
 			$this->global_privilege = false;
@@ -20,28 +20,34 @@
 			$this->button_add = true;
 			$this->button_edit = true;
 			$this->button_delete = true;
-			$this->button_detail = false;
+			$this->button_detail = true;
 			$this->button_show = false;
 			$this->button_filter = false;
 			$this->button_import = true;
-			$this->button_export = false;
-			$this->table = "barang";
+			$this->button_export = true;
+			$this->table = "barang_gudang";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
-			$this->col[] = ["label"=>"Nama Barang","name"=>"nama_barang"];
+			$this->col[] = ["label"=>"Nama Barang","name"=>"barang_id","join"=>"barang,nama_barang"];
+			$this->col[] = ["label"=>"Kategori","name"=>"kategori_id","join"=>"kategori,nama_kategori"];
+			$this->col[] = ["label"=>"Keterangan","name"=>"keterangan"];
+			$this->col[] = ["label"=>"Ditambahkan","name"=>"created_at"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
-			$this->form[] = ['label'=>'Nama Barang','name'=>'nama_barang','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Harga','name'=>'harga','type'=>'number','validation'=>'required','width'=>'col-sm-9'];
+			$this->form[] = ['label'=>'Nama Barang','name'=>'barang_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'barang,nama_barang','datatable_ajax'=>'true'];
+			$this->form[] = ['label'=>'Kategori','name'=>'kategori_id','type'=>'select2','validation'=>'required|min:1|max:255','width'=>'col-sm-10','datatable'=>'kategori,nama_kategori'];
+			$this->form[] = ['label'=>'Keterangan','name'=>'keterangan','type'=>'textarea','validation'=>'required|string|min:5|max:5000','width'=>'col-sm-10'];
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM
 			//$this->form = [];
-			//$this->form[] = ['label'=>'Nama Barang','name'=>'nama_barang','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			//$this->form[] = ['label'=>'Nama Barang','name'=>'barang_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'barang,nama_barang'];
+			//$this->form[] = ['label'=>'Kategori','name'=>'kategori_id','type'=>'select2','validation'=>'required|min:1|max:255','width'=>'col-sm-10','datatable'=>'kategori,nama_kategori'];
+			//$this->form[] = ['label'=>'Keterangan','name'=>'keterangan','type'=>'textarea','validation'=>'required|string|min:5|max:5000','width'=>'col-sm-10'];
 			# OLD END FORM
 
 			/* 
@@ -141,7 +147,123 @@
 	        | $this->script_js = "function() { ... }";
 	        |
 	        */
-	        $this->script_js = NULL;
+	        $this->script_js = "
+	        var active_barang = ".(request()->anak_barang ? request()->anak_barang : "1").";
+	        var full_url = '".request()->fullUrl()."';
+	        	$(function() {
+			    	$('#barang_id').select2();
+			    	$('#barang_anak_id').html('');
+			    	$.ajax({
+			  			type:'get',
+			  			url: '".asset('api/v1/anak_barang/')."/'+$('#barang_id').val(),
+			  			success: function (response) {
+
+			  				for (var i = 0; i < response.length; i++) {
+			  					if (active_barang == response[i].id)
+			  						var opt = '<option selected value='+response[i].id+'>'+response[i].value+'</option>';
+			  					else
+			  						var opt = '<option value='+response[i].id+'>'+response[i].value+'</option>';
+			  					$('#barang_anak_id').append(opt)	
+			  				}
+
+			  				$('#barang_anak_id').select2();
+			  				
+			  			}
+			  		});
+			  	});
+
+			  	function getChild(that) {
+			  		$('#barang_anak_id').html('');
+			  		$.ajax({
+			  			type:'get',
+			  			url: '".asset('api/v1/anak_barang/')."/'+$(that).val(),
+			  			success: function (response) {
+
+			  				for (var i = 0; i < response.length; i++) {
+			  					if (active_barang == response[i].id)
+			  						var opt = '<option selected value='+response[i].id+'>'+response[i].value+'</option>';
+			  					else
+			  						var opt = '<option value='+response[i].id+'>'+response[i].value+'</option>';
+
+			  					$('#barang_anak_id').append(opt)	
+			  				}
+
+			  				$('#barang_anak_id').select2().trigger('change');
+			  				
+			  			}
+			  		});
+			  	}
+
+			  	function getChild2(that) {
+			  		var active_barang = '".request()->anak_barang."';
+			  		$('#kategori_id').html('');
+			  		$.ajax({
+			  			type:'get',
+			  			url: '".asset('api/v1/kategori/')."/'+$(that).val(),
+			  			success: function (response) {
+			  				for (var i = 0; i < response.length; i++) {
+			  					if (active_barang == response[i].id)
+			  						var opt = '<option selected value='+response[i].id+'>'+response[i].value+'</option>';
+			  					else
+			  						var opt = '<option value='+response[i].id+'>'+response[i].value+'</option>';
+			  					
+			  					$('#kategori_id').append(opt)	
+			  				}
+
+			  				$('#kategori_id').select2();
+			  				
+			  			}
+			  		});
+
+			  		$.ajax({
+			  			type:'get',
+			  			url: '".asset('api/v1/satuan/')."/'+$(that).val(),
+			  			success: function (response) {
+			  				$('#satuan').html('');
+			  				for (var i = 0; i < response.length; i++) {
+			  					$('#satuan').append(`
+			  						<hr/>
+			  						<div class='well'>
+			  						<h5>Satuan `+response[i].value+`</h5>
+			  						<div class='row'>
+			  						  <div class='col-sm-4'>
+			  						    <label>Masuk</label>
+			  						    <input class='form-control' value='0' type='number' name='masuk[`+response[i].value+`]'>
+			  						  </div>
+
+			  						  <div class='col-sm-4'>
+			  						    <label>Keluar</label>
+			  						    <input class='form-control' value='0' type='number' name='keluar[`+response[i].value+`]'>
+			  						  </div>
+
+			  						  <div class='col-sm-4'>
+			  						    <label>Saldo</label>
+			  						    <input class='form-control' value='0' type='number' name='total[`+response[i].value+`]'>
+			  						  </div>
+			  						</div>
+			  						</div>
+			  					`);
+			  				}
+			  			}
+			  		});
+			  	}
+
+			  	function getDataByChild(that) {
+			  		window.location.href = '".request()->url()."?induk_barang='+$('#barang_id').val()+'&anak_barang='+$(that).val()
+			  	}
+
+			  	function changeYear(that) {
+			  		full_url = full_url.replace(/year=[0-9]{4}/, 'year='+$(that).val());
+
+			  		window.location.href = full_url;
+			  	}
+
+			  	function changeMonth(that) {
+			  		full_url = full_url.replace(/month=[0-9]{1,2}/, 'month='+$(that).val());
+
+			  		window.location.href = full_url;
+			  	}
+	        ";
 
 
             /*
@@ -177,6 +299,8 @@
 	        |
 	        */
 	        $this->load_js = array();
+
+	        $this->load_js[] = asset('js/select2.full.min.js');
 	        
 	        
 	        
@@ -188,7 +312,25 @@
 	        | $this->style_css = ".style{....}";
 	        |
 	        */
-	        $this->style_css = NULL;
+	        $this->style_css = "
+	        	.select2-container--default .select2-selection--single {
+	        	           border-radius: 0px !important
+	        	       }
+
+	        	       .select2-container .select2-selection--single {
+	        	           height: 35px !important;
+	        	       }
+
+	        	       .select2-container--default .select2-selection--multiple .select2-selection__choice {
+	        	           background-color: #3c8dbc !important;
+	        	           border-color: #367fa9 !important;
+	        	           color: #fff !important;
+	        	       }
+
+	        	       .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+	        	           color: #fff !important;
+	        	       }
+	        ";
 	        
 	        
 	        
@@ -201,6 +343,7 @@
 	        |
 	        */
 	        $this->load_css = array();
+	        $this->load_css[] = asset('css/select2.min.css');
 	        
 	        
 	    }
@@ -228,7 +371,7 @@
 	    |
 	    */
 	    public function hook_query_index(&$query) {
-	        $query->whereNull('parent_id')->where('jenis', 'cimuning');
+	        //Your code here
 	            
 	    }
 
@@ -250,7 +393,7 @@
 	    |
 	    */
 	    public function hook_before_add(&$postdata) {        
-	        $postdata['jenis'] = 'cimuning';
+	        //Your code here
 
 	    }
 
@@ -299,7 +442,9 @@
 	    | 
 	    */
 	    public function hook_before_delete($id) {
-	        //Your code here
+	    	$check = DB::table('angka_satuan_barang')->where('barang_gudang_id', $id);
+	    	if ($check->count()) 
+		        $check->delete();
 
 	    }
 
@@ -315,9 +460,80 @@
 
 	    }
 
+	    public function getIndex() {
+	      //First, Add an auth
+	       if(!CRUDBooster::isView()) CRUDBooster::denyAccess();
+
+	       $year = request()->has('year') ? request()->year : date('Y');
+	       $month = request()->has('month') ? request()->month : date('m');
+	       //Create your own query 
+
+	       if (! request()->has('month') && ! request()->has('year'))
+	       		return redirect(request()->fullUrlWithQuery([
+	       			'year' => $year, 
+	       			'month' => $month
+	       		]));
+
+
+	       $data = [];
+	       $data['page_title'] = 'Products Data';
+	       $data['result'] = DB::table('barang')
+	       							->where('id', request()->anak_barang)
+							       ->first();
+
+	       $data['induk_barangs'] = DB::table('barang')->whereNull('parent_id')->where('jenis', 'biasa')->get();
+	       $data['barang_gudangs'] = DB::table('barang_gudang')->where('barang_id', $data['result']->id) 
+		       								->whereYear('tanggal', $year)
+		       								->whereMonth('tanggal', $month)
+	      								 ->get();
+
+	       if (! request()->has('induk_barang'))
+	       		return redirect(request()->fullUrlWithQuery([
+	       			'induk_barang' => $data['induk_barangs'][0]->id,
+	       			'year' => $year, 
+	       			'month' => $month
+	       		]));
+	        
+	       //Create a view. Please use `cbView` method instead of view method from laravel.
+	       $this->cbView('barang_bawang_jadi/custom_index',$data);
+	    }
+
 
 
 	    //By the way, you can still create your own method in here... :) 
+
+	    public function getAdd() {
+	      //Create an Auth
+	      if (! CRUDBooster::isCreate() && $this->global_privilege==FALSE || $this->button_add==FALSE) {    
+	        CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+	      }
+	      
+	      $data = [];
+	      $data['page_title'] = 'Add Barang Bawang Jadi';
+
+	      $data['barangs'] = DB::table('barang')->whereNull('parent_id')->where('jenis', 'biasa')->get();
+	      $data['gudangs'] = DB::table('gudang')->get(); 
+	      //Please use cbView method instead view method from laravel
+	      $this->cbView('barang_bawang_jadi/custom_add',$data);
+	    }
+
+	    public function store()
+	    {
+	    	$insert = \App\BarangGudang::insert([
+	    		'barang_id' => Request::input('barang_id'),
+	    		'kategori_id' => 1,
+	    		'gudang_id' => Request::input('gudang_id'),
+				'keterangan' => Request::input('keterangan'),
+				'jenis' => 'barang_bawang_jadi',
+				'tanggal' => today(),
+				'masuk' => json_encode(array_values(Request::input('masuk'))),
+				'keluar' => json_encode(array_values(Request::input('keluar'))),
+				'total' => json_encode(array_values(Request::input('total'))),
+	    	]);
+
+
+	    	return redirect('admin/barang-bawang-jadi');
+	    }
 
 
 	}

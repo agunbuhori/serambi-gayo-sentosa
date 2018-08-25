@@ -9,7 +9,7 @@
 
 	    public function cbInit() {
 	    	# START CONFIGURATION DO NOT REMOVE THIS LINE
-			$this->table 			   = "tb_material";	        
+			$this->table 			   = "material";	        
 			$this->title_field         = "nama_material";
 			$this->limit               = 20;
 			$this->orderby             = "id,desc";

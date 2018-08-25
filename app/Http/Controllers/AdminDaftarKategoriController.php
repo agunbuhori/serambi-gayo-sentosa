@@ -23,9 +23,9 @@
 			$this->button_detail = false;
 			$this->button_show = false;
 			$this->button_filter = false;
-			$this->button_import = false;
+			$this->button_import = true;
 			$this->button_export = false;
-			$this->table = "tb_kategori";
+			$this->table = "kategori";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 			# START COLUMNS DO NOT REMOVE THIS LINE

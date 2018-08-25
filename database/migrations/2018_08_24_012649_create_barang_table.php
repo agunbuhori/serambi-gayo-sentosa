@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTbPegawai extends Migration
+class CreateTbBarang extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,15 @@ class CreateTbPegawai extends Migration
      */
     public function up()
     {
-        Schema::create('tb_pegawai', function (Blueprint $table) {
+        Schema::create('barang', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('nama');
-            $table->string('jenis_kelamin')->default('laki-laki');
-            $table->string('email', 100)->unique();
-            $table->text('alamat')->nullable();
-            $table->string('nomor_telepon')->nullable();
+            $table->string('nama_barang');
+            $table->string('jenis')->nullable();
+            $table->integer('parent_id')->unsigned()->nullable();
+            $table->integer('harga')->default(0);
             $table->timestamps();
+
+            $table->foreign('parent_id')->references('id')->on('barang');
         });
     }
 
@@ -31,6 +32,6 @@ class CreateTbPegawai extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tb_pegawai');
+        Schema::dropIfExists('barang');
     }
 }

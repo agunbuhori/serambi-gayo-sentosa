@@ -13,13 +13,13 @@ class CreateTbSatuanMaterialAnak extends Migration
      */
     public function up()
     {
-        Schema::create('tb_satuan_material', function (Blueprint $table) {
+        Schema::create('satuan_material', function (Blueprint $table) {
             $table->increments('id');
             $table->smallInteger('satuan_id')->unsigned();
             $table->integer('material_id')->unsigned();
 
-            $table->foreign('satuan_id')->references('id')->on('tb_satuan');
-            $table->foreign('material_id')->references('id')->on('tb_material');
+            $table->foreign('satuan_id')->references('id')->on('satuan');
+            $table->foreign('material_id')->references('id')->on('material');
         });
     }
 
@@ -30,6 +30,6 @@ class CreateTbSatuanMaterialAnak extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tb_satuan_material');
+        Schema::dropIfExists('satuan_material');
     }
 }

@@ -25,12 +25,12 @@
 			$this->button_filter = false;
 			$this->button_import = true;
 			$this->button_export = true;
-			$this->table = "tb_material";
+			$this->table = "material";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
-			$this->col[] = ["label"=>"Induk Material","name"=>"parent_id","join"=>"tb_material,nama_material"];
+			$this->col[] = ["label"=>"Induk Material","name"=>"parent_id","join"=>"material,nama_material"];
 			$this->col[] = ["label"=>"Nama Material","name"=>"nama_material"];
 			$this->col[] = ["label"=>"Total","name"=>"total"];
 			$this->col[] = ["label"=>"Ditambahkan","name"=>"created_at"];
@@ -38,14 +38,14 @@
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
-			$this->form[] = ['label'=>'Induk Material','name'=>'parent_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'tb_material,nama_material','datatable_where'=>'parent_id IS NULL AND jenis = \'cimuning\''];
+			$this->form[] = ['label'=>'Induk Material','name'=>'parent_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'material,nama_material','datatable_where'=>'parent_id IS NULL AND jenis = \'cimuning\''];
 			$this->form[] = ['label'=>'Nama Material','name'=>'nama_material','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Total','name'=>'total','type'=>'number','validation'=>'required','width'=>'col-sm-9'];
+			$this->form[] = ['label'=>'Total','name'=>'total','type'=>'number','width'=>'col-sm-9'];
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM
 			//$this->form = [];
-			//$this->form[] = ['label'=>'Induk Material','name'=>'parent_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'tb_material,nama_material','datatable_where'=>'parent_id IS NULL AND jenis = \'cimuning\''];
+			//$this->form[] = ['label'=>'Induk Material','name'=>'parent_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'material,nama_material','datatable_where'=>'parent_id IS NULL AND jenis = \'cimuning\''];
 			//$this->form[] = ['label'=>'Nama Material','name'=>'nama_material','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			# OLD END FORM
 
@@ -233,7 +233,7 @@
 	    |
 	    */
 	    public function hook_query_index(&$query) {
-	        $query->whereNotNull('tb_material.parent_id')->where('tb_material.jenis', 'cimuning');
+	        $query->whereNotNull('material.parent_id')->where('material.jenis', 'cimuning');
 	            
 	    }
 

@@ -25,7 +25,7 @@
 			$this->button_filter = false;
 			$this->button_import = true;
 			$this->button_export = true;
-			$this->table = "tb_barang";
+			$this->table = "barang";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 			# START COLUMNS DO NOT REMOVE THIS LINE

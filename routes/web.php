@@ -14,3 +14,7 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/admin/relasi-satuan-material', 'SatuanMaterialController@index');
+
+Route::post('/admin/add_barang_bawang_jadi', 'AdminBarangBawangJadiController@store');

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTbGudang extends Migration
+class CreateTbSatuan extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class CreateTbGudang extends Migration
      */
     public function up()
     {
-        Schema::create('tb_gudang', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('nama_gudang');
-            $table->text('deskripsi')->nullable();
+        Schema::create('satuan', function (Blueprint $table) {
+            $table->smallIncrements('id');
+            $table->string('nama_satuan');
         });
     }
 
@@ -27,6 +26,6 @@ class CreateTbGudang extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tb_gudang');
+        Schema::dropIfExists('satuan');
     }
 }

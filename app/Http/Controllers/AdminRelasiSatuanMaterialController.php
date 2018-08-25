@@ -5,12 +5,12 @@
 	use DB;
 	use CRUDBooster;
 
-	class AdminBarangCimuningController extends \crocodicstudio\crudbooster\controllers\CBController {
+	class AdminRelasiSatuanMaterialController extends \crocodicstudio\crudbooster\controllers\CBController {
 
 	    public function cbInit() {
 
 			# START CONFIGURATION DO NOT REMOVE THIS LINE
-			$this->title_field = "nama_barang";
+			$this->title_field = "id";
 			$this->limit = "20";
 			$this->orderby = "id,desc";
 			$this->global_privilege = false;
@@ -25,23 +25,25 @@
 			$this->button_filter = false;
 			$this->button_import = true;
 			$this->button_export = false;
-			$this->table = "barang";
+			$this->table = "tb_satuan_material";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
-			$this->col[] = ["label"=>"Nama Barang","name"=>"nama_barang"];
+			$this->col[] = ["label"=>"Material Id","name"=>"material_id","join"=>"tb_material,nama_material"];
+			$this->col[] = ["label"=>"Satuan Id","name"=>"satuan_id","join"=>"tb_satuan,nama_satuan"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
-			$this->form[] = ['label'=>'Nama Barang','name'=>'nama_barang','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Harga','name'=>'harga','type'=>'number','validation'=>'required','width'=>'col-sm-9'];
+			$this->form[] = ['label'=>'Nama Material','name'=>'material_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'tb_satuan,nama_satuan'];
+			$this->form[] = ['label'=>'Nama Satuan','name'=>'satuan_id','type'=>'select2','validation'=>'required|min:1|max:255','width'=>'col-sm-10','datatable'=>'tb_material,nama_material'];
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM
 			//$this->form = [];
-			//$this->form[] = ['label'=>'Nama Barang','name'=>'nama_barang','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			//$this->form[] = ["label"=>"Satuan Id","name"=>"satuan_id","type"=>"select2","required"=>TRUE,"validation"=>"required|min:1|max:255","datatable"=>"satuan,id"];
+			//$this->form[] = ["label"=>"Material Id","name"=>"material_id","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"material,id"];
 			# OLD END FORM
 
 			/* 
@@ -228,7 +230,7 @@
 	    |
 	    */
 	    public function hook_query_index(&$query) {
-	        $query->whereNull('parent_id')->where('jenis', 'cimuning');
+	        //Your code here
 	            
 	    }
 
@@ -250,7 +252,7 @@
 	    |
 	    */
 	    public function hook_before_add(&$postdata) {        
-	        $postdata['jenis'] = 'cimuning';
+	        //Your code here
 
 	    }
 

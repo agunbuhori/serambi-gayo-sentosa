@@ -25,26 +25,28 @@
 			$this->button_filter = false;
 			$this->button_import = true;
 			$this->button_export = true;
-			$this->table = "tb_barang";
+			$this->table = "barang";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
-			$this->col[] = ["label"=>"Induk Barang","name"=>"parent_id","join"=>"tb_barang,nama_barang"];
+			$this->col[] = ["label"=>"Induk Barang","name"=>"parent_id","join"=>"barang,nama_barang"];
 			$this->col[] = ["label"=>"Nama Barang","name"=>"nama_barang"];
 			$this->col[] = ["label"=>"Harga","name"=>"harga"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
-			$this->form[] = ['label'=>'Induk Barang','name'=>'parent_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'tb_barang,nama_barang','datatable_where'=>'parent_id IS NULL AND jenis = \'biasa\''];
+			$this->form[] = ['label'=>'Induk Barang','name'=>'parent_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'barang,nama_barang','datatable_where'=>'parent_id IS NULL AND jenis = \'biasa\''];
 			$this->form[] = ['label'=>'Nama Barang','name'=>'nama_barang','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Harga','name'=>'harga','type'=>'number','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Kategori','name' => 'b','type'=>'select2','datatable'=>'kategori,nama_kategori','relationship_table'=>'kategori_barang'];
+			$this->form[] = ['label'=>'Satuan','name' => 'c','type'=>'select2','datatable'=>'satuan,nama_satuan','relationship_table'=>'satuan_barang'];
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM
 			//$this->form = [];
-			//$this->form[] = ['label'=>'Induk Barang','name'=>'parent_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'tb_barang,nama_barang','datatable_where'=>'parent_id IS NULL AND jenis = \'biasa\''];
+			//$this->form[] = ['label'=>'Induk Barang','name'=>'parent_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'barang,nama_barang','datatable_where'=>'parent_id IS NULL AND jenis = \'biasa\''];
 			//$this->form[] = ['label'=>'Nama Barang','name'=>'nama_barang','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			//$this->form[] = ['label'=>'Harga','name'=>'harga','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
 			# OLD END FORM
@@ -233,7 +235,7 @@
 	    |
 	    */
 	    public function hook_query_index(&$query) {
-	        $query->whereNotNull('tb_barang.parent_id')->where('tb_barang.jenis', 'biasa');
+	        $query->whereNotNull('barang.parent_id')->where('barang.jenis', 'biasa');
 	            
 	    }
 
@@ -319,9 +321,6 @@
 	        //Your code here
 
 	    }
-
-
-
 	    //By the way, you can still create your own method in here... :) 
 
 

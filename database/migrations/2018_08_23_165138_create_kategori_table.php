@@ -13,7 +13,7 @@ class CreateTbKategori extends Migration
      */
     public function up()
     {
-        Schema::create('tb_kategori', function (Blueprint $table) {
+        Schema::create('kategori', function (Blueprint $table) {
             $table->smallIncrements('id');
             $table->string('nama_kategori');
         });

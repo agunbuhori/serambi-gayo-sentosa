@@ -11,6 +11,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
+        foreach (range(24, 235) as $barang) {
+            DB::table('satuan_barang')->insert([
+                'satuan_id' => 9,
+                'barang_id' => $barang
+            ]);
+        }
     }
 }
